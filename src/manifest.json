@@ -11,12 +11,12 @@
         "actions": {
           "Startup": "onStartup",
           "Shutdown": "onShutdown",
-          "SupplyData": "onSupplyData"
+          "SupplyDataCollectionAgenzie": "onSupplyDataCollectionAgenzie",
+          "SupplyDataCollectionViaggi": "onSupplyDataCollectionViaggi",
+          "SupplyDataCollectionFacce": "onSupplyDataCollectionFacce",
+          "SupplyDataUserLikes": "onSupplyDataUserLikes"
         }
       }
     }
-  ],
-  "menu": {
-    "title": "my-unsplash"
-  }
+  ]
 }

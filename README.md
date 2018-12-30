@@ -2,12 +2,20 @@
 
 Forked from <https://github.com/BohemianCoding/unsplash-sketchplugin>
 
+Experiment for use Unsplash personal collections in my Sketch works.
+
+It doesn't user API but uses **source.unsplash.com** instead.
+
+Not really satisfying, but it works.
+
+
 ## References
 
 * <https://github.com/BohemianCoding/unsplash-sketchplugin>
 * <https://github.com/skpm/skpm>
 * <https://source.unsplash.com/>
 * <https://unsplash.com/documentation>
+* <https://developer.sketchapp.com/guides/>
 
 ## SKPM Readme
 
