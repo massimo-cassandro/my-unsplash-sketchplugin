@@ -9,32 +9,47 @@ const { DataSupplier, UI } = sketch
 const TMP_FOLDER = path.join(os.tmpdir(), 'com.sketchapp.unsplash-plugin')
 
 const config = {
-  collections: {
+  photos: {
     agenzie: {
       action: 'SupplyDataCollectionAgenzie',
-      title: 'Agenzie',
-      collectionId: '3688717'
+      title: 'Collection: Agenzie',
+      collectionId: '3688717',
+      search: null
     },
     viaggi: {
       action: 'SupplyDataCollectionViaggi',
-      title: 'Viaggi & Turismo',
-      collectionId: '3660951'
+      title: 'Collection: Viaggi & Turismo',
+      collectionId: '3660951',
+      search: null
     },
     facce: {
       action: 'SupplyDataCollectionFacce',
-      title: 'Facce',
-      collectionId: '3683482'
+      title: 'Collection: Facce',
+      collectionId: '3683482',
+      search: null
+    },
+    search_travel: {
+      action: 'SupplyDataSearchTravel',
+      title: 'Search: Travel',
+      collectionId: null,
+      search: 'travel'
+    },
+    search_face: {
+      action: 'SupplyDataSearchFace',
+      title: 'Search: Face',
+      collectionId: null,
+      search: 'face,faces'
     }
   },
   user: 'mazz'
 }
 
 export function onStartup () {
-  for (let i in config.collections) {
+  for (let i in config.photos) {
     DataSupplier.registerDataSupplier(
       'public.image',
-      config.collections[i].title,
-      config.collections[i].action)
+      config.photos[i].title,
+      config.photos[i].action)
   }
   // DataSupplier.registerDataSupplier('public.image', 'Agenzie', 'SupplyDataCollectionAgenzie')
   DataSupplier.registerDataSupplier('public.image', '❤️ @mazz', 'SupplyDataUserLikes')
@@ -51,39 +66,55 @@ export function onShutdown () {
 }
 
 export function onSupplyDataCollectionAgenzie (context) {
-  getRandomPhotoFromCollection(context, 'agenzie')
+  getRandomPhoto(context, 'agenzie')
 
   // https://source.unsplash.com/collection/3688717/1600x900
 }
 export function onSupplyDataCollectionViaggi (context) {
-  getRandomPhotoFromCollection(context, 'viaggi')
+  getRandomPhoto(context, 'viaggi')
 
   // https://source.unsplash.com/collection/3660951/1600x900
 }
 
 export function onSupplyDataCollectionFacce (context) {
-  getRandomPhotoFromCollection(context, 'facce')
+  getRandomPhoto(context, 'facce')
 
   // https://source.unsplash.com/collection/3683482/1600x900
 }
 
-export function onSupplyDataUserLikes (context) {
-  getRandomPhotoFromCollection(context, null)
+export function onSupplyDataSearchTravel (context) {
+  getRandomPhoto(context, 'search_travel')
+
+  // https://source.unsplash.com/1600x900/?travel
 }
 
-function getRandomPhotoFromCollection (context, collection) {
+export function onSupplyDataSearchFace (context) {
+  getRandomPhoto(context, 'search_face')
+
+  // https://source.unsplash.com/1600x900/?face,faces
+}
+
+export function onSupplyDataUserLikes (context) {
+  getRandomPhoto(context, null)
+}
+
+function getRandomPhoto (context, photoGroup) {
   let dataKey = context.data.key
+  let collectionId = photoGroup ? config.photos[photoGroup].collectionId : null
+  let searchTerm = photoGroup ? config.photos[photoGroup].search : null
   const items = util.toArray(context.data.items).map(sketch.fromNative)
   items.forEach(
-    (item, index) => process(item, index, dataKey, (collection ? config.collections[collection].collectionId : null))
+    (item, index) => process(item, index, dataKey, collectionId, searchTerm)
   )
 }
 
-function process (item, index, dataKey, collectionId) {
+function process (item, index, dataKey, collectionId, searchTerm) {
   let url = 'https://source.unsplash.com'
 
   if (collectionId) {
     url += '/collection/' + collectionId + '/1600x900'
+  } else if (searchTerm) {
+    url += '/1600x900/?' + searchTerm
   } else {
     url += '/user/' + config.user + '/likes/1600x900'
   }
